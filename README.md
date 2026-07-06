@@ -66,9 +66,24 @@ sulle tabelle ufficiali del CCNL.
 | `js/dati.js` | **Parametri fiscali 2025** — da aggiornare ogni anno |
 | `js/calcolo.js` | Motore di calcolo (funzioni pure) |
 | `js/app.js` | Collegamento form ↔ calcolo ↔ UI |
+| `manifest.json` | Web App Manifest (PWA) |
+| `sw.js` | Service worker (offline + installabilità) |
+| `icons/` | Icone dell'app (192/512/maskable/apple-touch) |
 
 Per aggiornare le aliquote di un nuovo anno, in genere basta modificare
 `js/dati.js` (scaglioni IRPEF, detrazioni, aliquote regionali).
+
+## App installabile (PWA)
+
+La pagina è una **Progressive Web App**: da Chrome su Android compare
+*«Aggiungi a schermata Home»* / *«Installa app»* e si apre a tutto schermo come
+un'app nativa, con funzionamento anche offline (gli asset sono in cache).
+
+Requisiti già soddisfatti: HTTPS (GitHub Pages), `manifest.json`, service worker
+con gestione `fetch`, icone 192/512 px + versione *maskable*.
+
+> Dopo ogni modifica agli asset, incrementare la costante `CACHE` in `sw.js`
+> (es. `ral-netto-v2`) per forzare l'aggiornamento della cache sui dispositivi.
 
 ## Pubblicare su GitHub Pages
 
