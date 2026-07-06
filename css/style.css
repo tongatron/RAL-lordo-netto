@@ -4,6 +4,15 @@ body {
   font-family: "Titillium Web", Geneva, Tahoma, sans-serif;
 }
 
+/* Testo digitato nei campi: nero (non il grigio chiaro di default) */
+.form-group input.form-control,
+.form-group input[type="number"],
+.form-group input[type="text"],
+.select-wrapper select,
+select.form-control {
+  color: #000;
+}
+
 .it-brand-title {
   font-weight: 700;
 }
