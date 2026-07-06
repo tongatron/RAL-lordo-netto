@@ -15,7 +15,49 @@ document.addEventListener('DOMContentLoaded', () => {
     esegui();
   });
   document.getElementById('btn-sim').addEventListener('click', simulaRAL);
+  initInstall();
 });
+
+// --- Pulsante "Installa l'app" (PWA), mostrato solo su telefono ---
+function initInstall() {
+  const wrap = document.getElementById('install-wrap');
+  const btn = document.getElementById('btn-install');
+  const hint = document.getElementById('install-hint');
+
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const ua = navigator.userAgent || '';
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  const isMobile = (navigator.userAgentData && navigator.userAgentData.mobile) || /Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+
+  // Già installata o non è un telefono: non mostrare nulla.
+  if (isStandalone || !isMobile) return;
+
+  let deferredPrompt = null;
+
+  // Android/Chrome: intercetta l'evento e mostra il pulsante.
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    wrap.hidden = false;
+  });
+
+  // iOS/Safari non emette l'evento: mostra comunque il pulsante con le istruzioni.
+  if (isIOS) wrap.hidden = false;
+
+  btn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      wrap.hidden = true;
+    } else if (isIOS) {
+      hint.hidden = false;
+      hint.textContent = 'Tocca l’icona Condividi in basso, poi «Aggiungi a Home».';
+    }
+  });
+
+  window.addEventListener('appinstalled', () => { wrap.hidden = true; });
+}
 
 // Popola il menu delle regioni, con il Piemonte preselezionato.
 function popolaRegioni() {

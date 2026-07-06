@@ -72,6 +72,11 @@ select.form-control {
   background-color: #f0f6fc;
 }
 
+/* Il pulsante "Installa l'app" è per il solo telefono: nascosto su schermi larghi */
+@media (min-width: 821px) {
+  #install-wrap { display: none !important; }
+}
+
 /* Box simulazione RAL da contratto */
 .sim-contratto {
   background-color: #f0f6fc;

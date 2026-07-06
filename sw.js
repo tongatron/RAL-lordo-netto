@@ -3,7 +3,7 @@
  * Strategia: cache-first sugli asset locali, con fallback a index.html per la navigazione.
  * Aggiornare CACHE ad ogni release per invalidare la cache vecchia.
  */
-const CACHE = 'ral-netto-v1';
+const CACHE = 'ral-netto-v2';
 
 // Asset locali (percorsi relativi allo scope del service worker).
 const ASSETS = [
