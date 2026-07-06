@@ -1,11 +1,16 @@
 /*
  * sw.js — Service worker per l'app installabile (PWA).
- * Strategia: cache-first sugli asset locali, con fallback a index.html per la navigazione.
- * Aggiornare CACHE ad ogni release per invalidare la cache vecchia.
+ *
+ * Strategia AUTO-AGGIORNANTE (nessun numero di versione da incrementare a mano):
+ *   - navigazione (HTML): network-first, con fallback alla cache se offline;
+ *   - altri asset locali: stale-while-revalidate — si serve subito la copia in
+ *     cache (veloce, funziona offline) e in parallelo si scarica la versione
+ *     aggiornata, che verrà mostrata al reload successivo.
+ *
+ * Così ogni deploy raggiunge gli utenti da solo: basta fare push.
  */
-const CACHE = 'ral-netto-v2';
+const CACHE = 'ral-netto';
 
-// Asset locali (percorsi relativi allo scope del service worker).
 const ASSETS = [
   './',
   './index.html',
@@ -37,25 +42,34 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
 
-  // Navigazione: rete, con fallback a index.html dalla cache (per uso offline).
+  // Navigazione: sempre la versione più fresca quando si è online.
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req).catch(() => caches.match('./index.html'))
+      fetch(req)
+        .then((res) => {
+          caches.open(CACHE).then((c) => c.put('./index.html', res.clone()));
+          return res;
+        })
+        .catch(() => caches.match('./index.html'))
     );
     return;
   }
 
-  // Altri GET: cache-first, poi rete (e memorizza le risposte valide).
+  // Solo risorse dello stesso dominio (gli asset CDN restano gestiti dal browser).
+  if (new URL(req.url).origin !== self.location.origin) return;
+
+  // Stale-while-revalidate: cache subito, aggiornamento in background.
   event.respondWith(
-    caches.match(req).then((cached) => {
-      if (cached) return cached;
-      return fetch(req).then((res) => {
-        if (res && res.status === 200 && (res.type === 'basic' || res.type === 'cors')) {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy));
-        }
-        return res;
-      }).catch(() => cached);
-    })
+    caches.open(CACHE).then((cache) =>
+      cache.match(req).then((cached) => {
+        const network = fetch(req)
+          .then((res) => {
+            if (res && res.status === 200) cache.put(req, res.clone());
+            return res;
+          })
+          .catch(() => cached);
+        return cached || network;
+      })
+    )
   );
 });

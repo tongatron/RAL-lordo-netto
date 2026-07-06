@@ -82,8 +82,16 @@ un'app nativa, con funzionamento anche offline (gli asset sono in cache).
 Requisiti già soddisfatti: HTTPS (GitHub Pages), `manifest.json`, service worker
 con gestione `fetch`, icone 192/512 px + versione *maskable*.
 
-> Dopo ogni modifica agli asset, incrementare la costante `CACHE` in `sw.js`
-> (es. `ral-netto-v2`) per forzare l'aggiornamento della cache sui dispositivi.
+Un pulsante **«Installa l'app»** compare solo su telefono (nascosto su desktop):
+su Android/Chrome lancia il prompt nativo, su iOS/Safari mostra l'istruzione
+«Aggiungi a Home».
+
+### Aggiornamenti automatici
+
+Il service worker usa una strategia **stale-while-revalidate**: ad ogni visita
+online scarica in background la versione aggiornata degli asset, mostrata al
+reload successivo. **Non serve incrementare alcun numero di versione**: basta
+fare `git push` e l'aggiornamento raggiunge da solo i dispositivi.
 
 ## Pubblicare su GitHub Pages
 
