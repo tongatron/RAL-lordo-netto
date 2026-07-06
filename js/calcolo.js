@@ -142,6 +142,20 @@ function calcolaNetto(input) {
 }
 
 /*
+ * RAL minima da CCNL + livello.
+ * La RAL a tempo pieno = retribuzione minima mensile × mensilità del contratto.
+ * Se le ore settimanali sono inferiori all'orario pieno del contratto, la RAL
+ * viene riproporzionata (contratto part-time orizzontale).
+ */
+function ralMinimaContratto(contratto, livelloIdx, oreSettimana) {
+  const liv = contratto.livelli[livelloIdx];
+  const ralFullTime = liv.totaleMensile * contratto.mensilita;
+  const ore = oreSettimana > 0 ? oreSettimana : contratto.oreFullTime;
+  const ral = ralFullTime * (ore / contratto.oreFullTime);
+  return { ralFullTime, ral, ore, oreFullTime: contratto.oreFullTime, mensilita: contratto.mensilita, livello: liv.nome };
+}
+
+/*
  * Calcola il netto come RANGE, facendo variare la sola addizionale comunale
  * (min = Comune che non l'applica, max = tetto ordinario 0,8%).
  * Il valore "centrale" usa l'aliquota comunale tipica.

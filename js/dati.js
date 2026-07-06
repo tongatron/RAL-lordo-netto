@@ -65,3 +65,30 @@ const REGIONI = [
 
 // Settimane retribuite in un anno (52). Usata per il netto orario.
 const SETTIMANE_ANNO = 52;
+
+/*
+ * Contratti collettivi per la stima della RAL MINIMA da CCNL + livello.
+ * "totaleMensile" = minimo tabellare + ex indennità di contingenza + EDR
+ * (retribuzione minima mensile lorda a tempo pieno).
+ * RAL minima full-time = totaleMensile × mensilita.
+ * Verificare sempre sulle tabelle ufficiali del CCNL: i minimi cambiano a ogni tranche.
+ */
+const CONTRATTI = [
+  {
+    nome: "Commercio – Terziario (Confcommercio)",
+    oreFullTime: 40,
+    mensilita: 14,
+    aggiornato: "in vigore dal 1° novembre 2025",
+    fonte: "Tabelle CCNL Terziario Confcommercio",
+    livelli: [
+      { nome: "Quadri", totaleMensile: 2984.21 },
+      { nome: "1° livello", totaleMensile: 2504.07 },
+      { nome: "2° livello", totaleMensile: 2233.60 },
+      { nome: "3° livello", totaleMensile: 1981.84 },
+      { nome: "4° livello — Impiegato d'ordine", totaleMensile: 1781.68 },
+      { nome: "5° livello", totaleMensile: 1658.01 },
+      { nome: "6° livello", totaleMensile: 1539.70 },
+      { nome: "7° livello", totaleMensile: 1395.89 }
+    ]
+  }
+];

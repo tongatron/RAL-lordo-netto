@@ -63,6 +63,35 @@
                     <h2 class="card-title h5">Dati della proposta</h2>
                     <form id="form-calcolo" novalidate>
 
+                      <!-- Simulazione RAL minima da contratto (opzionale) -->
+                      <div class="sim-contratto p-3 mb-4">
+                        <p class="sim-titolo mb-1">Non conosci la RAL? Stimala dal contratto <span class="badge badge-primary">opzionale</span></p>
+                        <small class="text-muted d-block mb-3">Calcola la RAL <strong>minima</strong> in base a CCNL, livello e ore. Riporta il valore nel campo RAL qui sotto.</small>
+
+                        <div class="form-group">
+                          <label for="ccnl" class="active">CCNL</label>
+                          <div class="select-wrapper">
+                            <select id="ccnl"><!-- popolato via JS --></select>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="livello" class="active">Livello contrattuale</label>
+                          <div class="select-wrapper">
+                            <select id="livello"><!-- popolato via JS --></select>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="oreSim" class="active">Ore settimanali</label>
+                          <input type="number" id="oreSim" min="1" max="48" step="1" value="40">
+                          <small class="form-text" id="oreSim-help">Tempo pieno del contratto: 40 ore. Inserisci meno ore per un part-time.</small>
+                        </div>
+
+                        <button type="button" id="btn-sim" class="btn btn-outline-primary btn-sm w-100">Calcola RAL minima e usala</button>
+                        <small class="form-text mt-2" id="sim-esito"></small>
+                      </div>
+
                       <div class="form-group">
                         <label for="ral" class="active">RAL — Retribuzione Annua Lorda (€)</label>
                         <input type="number" id="ral" min="0" step="100" value="23000" required>
@@ -89,21 +118,7 @@
                       <div class="form-group">
                         <label for="ore" class="active">Ore settimanali</label>
                         <input type="number" id="ore" min="1" max="48" step="1" value="38">
-                        <small class="form-text">Ore effettivamente lavorate a settimana. Usate per il netto orario e per il part-time.</small>
-                      </div>
-
-                      <div class="form-check mt-2">
-                        <input id="partTime" type="checkbox">
-                        <label for="partTime">Contratto part-time (riproporziona la RAL dal tempo pieno)</label>
-                      </div>
-
-                      <div class="form-group mt-3" id="pt-fields" hidden>
-                        <label for="oreFullTime" class="active">Ore settimanali a tempo pieno (riferimento)</label>
-                        <input type="number" id="oreFullTime" min="1" max="48" step="1" value="38">
-                        <small class="form-text">
-                          La <strong>RAL</strong> inserita è intesa come quella a tempo pieno: verrà
-                          ridotta in proporzione (ore lavorate ÷ ore tempo pieno). Il superminimo non viene riproporzionato.
-                        </small>
+                        <small class="form-text">Ore lavorate a settimana. Usate per il netto orario.</small>
                       </div>
 
                       <div class="form-group">
@@ -112,6 +127,12 @@
                           <select id="regione"><!-- popolato via JS --></select>
                         </div>
                         <small class="form-text">Determina l'addizionale regionale IRPEF (valore indicativo).</small>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="comunale" class="active">Addizionale comunale IRPEF (%)</label>
+                        <input type="number" id="comunale" min="0" max="0.9" step="0.01" value="0.80">
+                        <small class="form-text">Aliquota del tuo Comune. Torino applica lo 0,80% (predefinito). Sotto trovi comunque l'intervallo al variare del Comune.</small>
                       </div>
 
                       <div class="form-check mt-3">
@@ -188,10 +209,11 @@
               consulente del lavoro. Il calcolo assume rapporto a tempo pieno per l'intero anno.
             </p>
             <p class="mb-0">
-              L'<strong>addizionale comunale</strong> varia da Comune a Comune: per questo il netto è espresso come
-              intervallo (Comune che non l'applica → aliquota massima ordinaria 0,8%). L'<strong>addizionale
-              regionale</strong> usa un valore rappresentativo per regione. Non sono inclusi eventuali fringe
-              benefit, premi, o l'Assegno Unico (erogato a parte dall'INPS).
+              L'<strong>addizionale comunale</strong> impostata è quella che indichi (predefinita: Torino 0,80%);
+              l'intervallo mostrato copre i Comuni tra lo 0% e il tetto ordinario 0,8%. L'<strong>addizionale
+              regionale</strong> usa un valore rappresentativo per regione. La <strong>RAL minima da CCNL</strong> è
+              una stima del solo minimo contrattuale (minimo tabellare + contingenza + EDR × mensilità): da verificare
+              sulle tabelle ufficiali. Non sono inclusi fringe benefit, premi, o l'Assegno Unico (erogato a parte dall'INPS).
             </p>
           </div>
 

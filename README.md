@@ -7,6 +7,8 @@ dipendente**. Calcolo riferito all'anno d'imposta **2025**.
 Interfaccia basata su **[Bootstrap Italia](https://italia.github.io/bootstrap-italia/)**
 (Design System delle PA italiane), font **Titillium Web**.
 
+**Online:** https://tongatron.org/RAL-lordo-netto/
+
 ## Come funziona
 
 Tutto il calcolo avviene **nel browser**, in JavaScript. Nessun dato viene
@@ -21,26 +23,39 @@ RAL + Superminimo (lordo annuo)
                   − detrazioni lavoro dipendente
                   − detrazione coniuge a carico (se indicata)
                   − ulteriore detrazione 2025 (redditi 20–40k)
-  − addizionale regionale IRPEF (per regione)
-  − addizionale comunale IRPEF (gestita come RANGE 0 → 0,8%)
+  − addizionale regionale IRPEF (per regione, predefinita: Piemonte)
+  − addizionale comunale IRPEF (impostabile, predefinita: Torino 0,80%)
   + bonus integrativo 2025 (redditi ≤ 20k, non tassato)
 = NETTO annuo → ÷ mensilità → netto mensile; ÷ ore annue → netto orario
 ```
 
-L'**addizionale comunale** non viene chiesta (varia Comune per Comune): il netto
-è mostrato come **intervallo**. L'**addizionale regionale** usa un valore
-rappresentativo per regione. È una **stima**, non sostituisce la busta paga.
+L'**addizionale comunale** è impostabile (predefinita: Torino 0,80%); il netto
+mostra anche l'**intervallo** al variare del Comune (0% → 0,8%). L'**addizionale
+regionale** usa un valore rappresentativo per regione. È una **stima**, non
+sostituisce la busta paga.
 
-### Part-time
+### Stima della RAL minima da CCNL
 
-Spuntando *Contratto part-time* la **RAL** inserita è intesa come quella a
-**tempo pieno** e viene ridotta in proporzione alle ore
-(`RAL × ore lavorate ÷ ore tempo pieno`); il superminimo resta invariato.
+Il box *«Non conosci la RAL? Stimala dal contratto»* calcola la RAL **minima**
+partendo da **CCNL + livello + ore settimanali**:
 
-Il part-time incide sul netto **solo** tramite la RAL più bassa: aliquote e
-scaglioni non cambiano. Nota: le **detrazioni da lavoro dipendente non si
-riducono** per il part-time (dipendono dai giorni di lavoro nell'anno, non dalle
-ore), quindi su un rapporto annuale restano piene.
+```
+RAL minima (full-time) = (minimo tabellare + ex contingenza + EDR) × mensilità
+RAL effettiva          = RAL full-time × (ore settimanali ÷ ore tempo pieno)
+```
+
+Se le ore sono inferiori all'orario pieno del contratto (es. 24h su 40h), la RAL
+viene riproporzionata. Nota: le **detrazioni da lavoro dipendente non si riducono**
+per il part-time (dipendono dai giorni di lavoro nell'anno, non dalle ore).
+
+Contratti inclusi (in `js/dati.js`, `CONTRATTI`):
+
+- **Commercio – Terziario (Confcommercio)** — 40h/settimana, 14 mensilità,
+  minimi in vigore dal 1° novembre 2025. Es.: *4° livello — Impiegato d'ordine*
+  = 1.781,68 €/mese → RAL full-time 24.943,52 €.
+
+I minimi contrattuali cambiano a ogni tranche di rinnovo: **verificare sempre**
+sulle tabelle ufficiali del CCNL.
 
 ## Struttura
 

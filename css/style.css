@@ -63,6 +63,32 @@ body {
   background-color: #f0f6fc;
 }
 
+/* Box simulazione RAL da contratto */
+.sim-contratto {
+  background-color: #f0f6fc;
+  border: 1px solid #b4c5d6;
+  border-radius: 6px;
+}
+.sim-titolo {
+  font-weight: 700;
+  color: #17324d;
+}
+.sim-titolo .badge {
+  background-color: #0066cc;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+#sim-esito {
+  font-weight: 600;
+  color: #0066cc;
+}
+
 /* Su schermi larghi tiene i risultati visibili durante lo scroll del form */
 @media (min-width: 992px) {
   #risultati {
