@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calcolo stipendio netto da RAL — anno 2025</title>
+  <meta name="description" content="Stima del netto annuo, mensile e orario a partire dalla RAL, per lavoro dipendente. Calcolo IRPEF 2025 a scaglioni con detrazioni e addizionali.">
+
+  <!-- Font Titillium Web (Design System PA) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Italia -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-italia@2.15.0/dist/css/bootstrap-italia.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header istituzionale -->
+  <header class="it-header-wrapper">
+    <div class="it-header-center-wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="it-header-center-content-wrapper">
+              <div class="it-brand-wrapper">
+                <a href="#" aria-label="Torna all'inizio">
+                  <svg class="icon" aria-hidden="true"><use href="https://cdn.jsdelivr.net/npm/bootstrap-italia@2.15.0/dist/svg/sprites.svg#it-pa"></use></svg>
+                  <div class="it-brand-text">
+                    <div class="it-brand-title">Calcolo stipendio netto</div>
+                    <div class="it-brand-tagline d-none d-md-block">Dalla RAL al netto — lavoro dipendente, anno 2025</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container my-4 my-lg-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-lg-11">
+
+          <h1 class="h2 mb-2">Dalla RAL al netto</h1>
+          <p class="lead text-muted mb-4">
+            Inserisci la RAL in trattativa: la pagina stima il <strong>netto annuo</strong>,
+            il <strong>netto mensile</strong> e il <strong>netto orario</strong>. Il calcolo avviene
+            interamente nel tuo browser: nessun dato viene inviato o salvato.
+          </p>
+
+          <div class="row g-4">
+
+            <!-- Colonna form -->
+            <div class="col-12 col-lg-6">
+              <div class="card-wrapper card-space">
+                <div class="card card-bg">
+                  <div class="card-body">
+                    <h2 class="card-title h5">Dati della proposta</h2>
+                    <form id="form-calcolo" novalidate>
+
+                      <div class="form-group">
+                        <label for="ral" class="active">RAL — Retribuzione Annua Lorda (€)</label>
+                        <input type="number" id="ral" min="0" step="100" value="23000" required>
+                        <small class="form-text">Retribuzione annua lorda offerta, escluso il superminimo.</small>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="superminimo" class="active">Superminimo annuo (€)</label>
+                        <input type="number" id="superminimo" min="0" step="100" value="0">
+                        <small class="form-text">Eventuale quota aggiuntiva non assorbibile. Lascia 0 se assente.</small>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="mensilita" class="active">Numero di mensilità</label>
+                        <div class="select-wrapper">
+                          <select id="mensilita">
+                            <option value="12">12 mensilità</option>
+                            <option value="13" selected>13 mensilità</option>
+                            <option value="14">14 mensilità</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="ore" class="active">Ore settimanali</label>
+                        <input type="number" id="ore" min="1" max="48" step="1" value="38">
+                        <small class="form-text">Ore effettivamente lavorate a settimana. Usate per il netto orario e per il part-time.</small>
+                      </div>
+
+                      <div class="form-check mt-2">
+                        <input id="partTime" type="checkbox">
+                        <label for="partTime">Contratto part-time (riproporziona la RAL dal tempo pieno)</label>
+                      </div>
+
+                      <div class="form-group mt-3" id="pt-fields" hidden>
+                        <label for="oreFullTime" class="active">Ore settimanali a tempo pieno (riferimento)</label>
+                        <input type="number" id="oreFullTime" min="1" max="48" step="1" value="38">
+                        <small class="form-text">
+                          La <strong>RAL</strong> inserita è intesa come quella a tempo pieno: verrà
+                          ridotta in proporzione (ore lavorate ÷ ore tempo pieno). Il superminimo non viene riproporzionato.
+                        </small>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="regione" class="active">Regione di residenza</label>
+                        <div class="select-wrapper">
+                          <select id="regione"><!-- popolato via JS --></select>
+                        </div>
+                        <small class="form-text">Determina l'addizionale regionale IRPEF (valore indicativo).</small>
+                      </div>
+
+                      <div class="form-check mt-3">
+                        <input id="coniuge" type="checkbox">
+                        <label for="coniuge">Coniuge a carico</label>
+                      </div>
+
+                      <button type="submit" class="btn btn-primary mt-4 w-100">Calcola il netto</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Colonna risultati -->
+            <div class="col-12 col-lg-6">
+              <div id="risultati" aria-live="polite">
+
+                <div class="card-wrapper card-space">
+                  <div class="card card-bg border-primary">
+                    <div class="card-body">
+                      <h2 class="card-title h5">Risultato stimato</h2>
+
+                      <div class="risultato-principale">
+                        <span class="risultato-label">Netto mensile</span>
+                        <span class="risultato-valore" id="out-mensile">—</span>
+                        <span class="risultato-range" id="out-mensile-range"></span>
+                      </div>
+
+                      <hr>
+
+                      <div class="row text-center g-3">
+                        <div class="col-6">
+                          <div class="risultato-secondario">
+                            <span class="risultato-label">Netto annuo</span>
+                            <span class="risultato-valore-sm" id="out-annuo">—</span>
+                            <span class="risultato-range-sm" id="out-annuo-range"></span>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="risultato-secondario">
+                            <span class="risultato-label">Netto orario</span>
+                            <span class="risultato-valore-sm" id="out-orario">—</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Dettaglio calcolo -->
+                <div class="card-wrapper card-space">
+                  <div class="card card-bg">
+                    <div class="card-body">
+                      <h3 class="card-title h6">Come si arriva al netto</h3>
+                      <table class="table table-sm dettaglio-tabella mb-0">
+                        <tbody id="dettaglio-body">
+                          <tr><td class="text-muted" colspan="2">Compila il modulo e premi «Calcola».</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Disclaimer -->
+          <div class="alert alert-warning mt-4" role="alert">
+            <h4 class="alert-heading h6">Attenzione: stima indicativa</h4>
+            <p class="mb-1">
+              Il risultato è una <strong>stima</strong> e non sostituisce una busta paga o il parere di un
+              consulente del lavoro. Il calcolo assume rapporto a tempo pieno per l'intero anno.
+            </p>
+            <p class="mb-0">
+              L'<strong>addizionale comunale</strong> varia da Comune a Comune: per questo il netto è espresso come
+              intervallo (Comune che non l'applica → aliquota massima ordinaria 0,8%). L'<strong>addizionale
+              regionale</strong> usa un valore rappresentativo per regione. Non sono inclusi eventuali fringe
+              benefit, premi, o l'Assegno Unico (erogato a parte dall'INPS).
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="it-footer">
+    <div class="it-footer-small-prints clearfix">
+      <div class="container">
+        <p class="py-2 text-white mb-0">
+          Anno d'imposta 2025 · Calcolo eseguito localmente nel browser · Nessun dato raccolto.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/dati.js"></script>
+  <script src="js/calcolo.js"></script>
+  <script src="js/app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-italia@2.15.0/dist/js/bootstrap-italia.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+/* style.css — Personalizzazioni sopra Bootstrap Italia. Font: Titillium Web. */
+
+body {
+  font-family: "Titillium Web", Geneva, Tahoma, sans-serif;
+}
+
+.it-brand-title {
+  font-weight: 700;
+}
+
+/* Riquadro risultato principale */
+.risultato-principale {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0 0.25rem;
+}
+.risultato-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #5a6772;
+  font-weight: 600;
+}
+.risultato-valore {
+  font-size: 2.75rem;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #0066cc;
+}
+.risultato-valore-sm {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #17324d;
+  display: block;
+}
+.risultato-range {
+  font-size: 0.95rem;
+  color: #5a6772;
+}
+.risultato-range-sm {
+  font-size: 0.8rem;
+  color: #5a6772;
+  display: block;
+}
+.risultato-secondario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/* Tabella dettaglio */
+.dettaglio-tabella td {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.9rem;
+  vertical-align: middle;
+}
+.dettaglio-tabella .valore-num {
+  font-family: "Roboto Mono", monospace;
+  white-space: nowrap;
+}
+.dettaglio-tabella .riga-totale {
+  font-weight: 700;
+  background-color: #f0f6fc;
+}
+
+/* Su schermi larghi tiene i risultati visibili durante lo scroll del form */
+@media (min-width: 992px) {
+  #risultati {
+    position: sticky;
+    top: 1.5rem;
+  }
+}
