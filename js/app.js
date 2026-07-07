@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     esegui();
   });
   document.getElementById('btn-sim').addEventListener('click', simulaRAL);
+  document.getElementById('comune').addEventListener('change', applicaComune);
   initInstall();
 });
 
@@ -69,6 +70,50 @@ function popolaRegioni() {
     if (r.nome === 'Piemonte') opt.selected = true;
     select.appendChild(opt);
   });
+  // Al cambio di regione, ripopola i capoluoghi figli.
+  select.addEventListener('change', () => popolaComuni('Torino'));
+  // Prima compilazione: capoluoghi del Piemonte con Torino preselezionata.
+  popolaComuni('Torino');
+}
+
+// Popola i Comuni capoluogo della regione selezionata e compila l'aliquota.
+function popolaComuni(comuneDefault) {
+  const idxRegione = parseInt(document.getElementById('regione').value, 10) || 0;
+  const comuni = REGIONI[idxRegione].comuni || [];
+  const selC = document.getElementById('comune');
+  selC.innerHTML = '';
+
+  comuni.forEach((c, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${c.nome} — ${c.aliquota.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+    if (comuneDefault && c.nome === comuneDefault) opt.selected = true;
+    selC.appendChild(opt);
+  });
+
+  // Opzione per un Comune non capoluogo: aliquota inserita a mano.
+  const altro = document.createElement('option');
+  altro.value = 'altro';
+  altro.textContent = 'Altro Comune (inserisci l’aliquota)';
+  selC.appendChild(altro);
+
+  // Applica l'aliquota del Comune selezionato al campo numerico.
+  applicaComune();
+}
+
+// Copia l'aliquota del Comune scelto nel campo "Addizionale comunale".
+function applicaComune() {
+  const idxRegione = parseInt(document.getElementById('regione').value, 10) || 0;
+  const selC = document.getElementById('comune');
+  const comuni = REGIONI[idxRegione].comuni || [];
+  const val = selC.value;
+  if (val === 'altro' || val === '') return; // Comune non capoluogo: non tocco il campo
+  const comune = comuni[parseInt(val, 10)];
+  if (comune) {
+    document.getElementById('comunale').value = comune.aliquota.toFixed(2);
+    // Se ci sono già dei risultati a schermo, riallinea subito.
+    if (document.getElementById('out-mensile').textContent !== '—') esegui();
+  }
 }
 
 // --- Simulazione RAL minima da CCNL + livello ---
