@@ -6,6 +6,18 @@ const euro = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR'
 const euro2 = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: 'always' });
 const perc = (frazione) => (frazione * 100).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
 
+// Testi delle icone "informazioni" nel dettaglio del calcolo.
+const INFO_BONUS =
+  'Somma integrativa introdotta dalla Legge di Bilancio 2025 (L. 207/2024) per i ' +
+  'redditi da lavoro dipendente fino a 20.000 €. È esente da imposte e si aggiunge ' +
+  'al netto: 7,1% del reddito fino a 8.500 €, 5,3% tra 8.500 e 15.000 €, 4,8% tra ' +
+  '15.000 e 20.000 €. Oltre i 20.000 € non spetta più: subentra l’ulteriore detrazione IRPEF.';
+const INFO_ULT_DETR =
+  'Ulteriore detrazione IRPEF (Legge di Bilancio 2025) per i redditi da lavoro ' +
+  'dipendente tra 20.000 e 40.000 €. Vale 1.000 € fissi fino a 32.000 €, poi ' +
+  'diminuisce gradualmente fino ad azzerarsi a 40.000 €. Sotto i 20.000 € è ' +
+  'sostituita dal bonus integrativo.';
+
 document.addEventListener('DOMContentLoaded', () => {
   popolaRegioni();
   popolaContratti();
@@ -219,22 +231,23 @@ function mostraDettaglio(c, input) {
     ['− Detrazioni lavoro dipendente', '− ' + euro2.format(c.detrLavoro), false]
   ];
   if (c.detrConiuge > 0) righe.push(['− Detrazione coniuge a carico', '− ' + euro2.format(c.detrConiuge), false]);
-  if (c.ultDetr > 0) righe.push(['− Ulteriore detrazione 2025', '− ' + euro2.format(c.ultDetr), false]);
+  if (c.ultDetr > 0) righe.push(['− Ulteriore detrazione 2025', '− ' + euro2.format(c.ultDetr), false, INFO_ULT_DETR]);
   righe.push(['= IRPEF netta', '− ' + euro2.format(c.irpefNetta), true]);
   righe.push([`− Addizionale regionale (${input.nomeRegione}, ${perc(input.aliquotaRegionale)})`, '− ' + euro2.format(c.addRegionale), false]);
   righe.push([`− Addizionale comunale (${perc(input.aliquotaComunale)})`, '− ' + euro2.format(c.addComunale), false]);
-  if (c.bonus > 0) righe.push(['+ Bonus integrativo 2025', '+ ' + euro2.format(c.bonus), false]);
+  if (c.bonus > 0) righe.push(['+ Bonus integrativo 2025', '+ ' + euro2.format(c.bonus), false, INFO_BONUS]);
   righe.push(['= Netto annuo', euro2.format(c.nettoAnnuo), true]);
   righe.push([`Netto mensile (÷ ${input.mensilita})`, euro2.format(c.nettoMensile), true]);
   righe.push([`Netto orario (${input.oreSettimana} h × ${SETTIMANE_ANNO} sett.)`, euro2.format(c.nettoOrario), false]);
 
   const body = document.getElementById('dettaglio-body');
   body.innerHTML = '';
-  for (const [label, valore, forte] of righe) {
+  for (const [label, valore, forte, info] of righe) {
     const tr = document.createElement('tr');
     if (forte) tr.className = 'riga-totale';
     const td1 = document.createElement('td');
     td1.textContent = label;
+    if (info) td1.appendChild(creaIconaInfo(info));
     const td2 = document.createElement('td');
     td2.className = 'text-end valore-num';
     td2.textContent = valore;
@@ -242,4 +255,30 @@ function mostraDettaglio(c, input) {
     tr.appendChild(td2);
     body.appendChild(tr);
   }
+  initTooltip();
+}
+
+// Crea l'icona "informazioni" con tooltip (Bootstrap Italia) e title di fallback.
+function creaIconaInfo(testo) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'btn-info-dettaglio ms-1';
+  btn.setAttribute('data-bs-toggle', 'tooltip');
+  btn.setAttribute('data-bs-placement', 'top');
+  btn.setAttribute('title', testo);
+  btn.setAttribute('aria-label', 'Come funziona: ' + testo);
+  btn.innerHTML =
+    '<svg class="icon icon-primary icon-sm" aria-hidden="true">' +
+    '<use href="https://cdn.jsdelivr.net/npm/bootstrap-italia@2.15.0/dist/svg/sprites.svg#it-help-circle"></use></svg>';
+  return btn;
+}
+
+// Inizializza i tooltip Bootstrap sulle icone appena inserite.
+function initTooltip() {
+  if (!window.bootstrap || !window.bootstrap.Tooltip) return;
+  document.querySelectorAll('#dettaglio-body [data-bs-toggle="tooltip"]').forEach((el) => {
+    const esistente = window.bootstrap.Tooltip.getInstance(el);
+    if (esistente) esistente.dispose();
+    new window.bootstrap.Tooltip(el);
+  });
 }

@@ -110,3 +110,21 @@ select.form-control {
     top: 1.5rem;
   }
 }
+
+/* Icona "informazioni" nelle righe del dettaglio calcolo */
+.btn-info-dettaglio {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  line-height: 0;
+  cursor: pointer;
+  vertical-align: baseline;
+}
+.btn-info-dettaglio .icon {
+  width: 1em;
+  height: 1em;
+}
+.btn-info-dettaglio:hover .icon,
+.btn-info-dettaglio:focus .icon {
+  opacity: 0.7;
+}
