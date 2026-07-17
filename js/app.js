@@ -219,8 +219,9 @@ function esegui() {
   const nettoMin = calcolaNetto(Object.assign({}, input, { aliquotaComunale: ADDIZIONALE_COMUNALE.max }));
 
   document.getElementById('out-mensile').textContent = euro.format(centrale.nettoMensile);
+  document.getElementById('out-mensilita').textContent = `(${input.mensilita} mensilità)`;
   document.getElementById('out-mensile-range').textContent =
-    `in altri Comuni: ${euro.format(nettoMin.nettoMensile)} – ${euro.format(nettoMax.nettoMensile)}`;
+    `${euro.format(nettoMin.nettoMensile)} – ${euro.format(nettoMax.nettoMensile)}`;
 
   document.getElementById('out-annuo').textContent = euro.format(centrale.nettoAnnuo);
   document.getElementById('out-annuo-range').textContent =

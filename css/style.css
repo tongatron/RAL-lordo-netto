@@ -42,6 +42,11 @@ select.form-control {
   color: #17324d;
   display: block;
 }
+.risultato-label-extra {
+  text-transform: none;
+  font-weight: 400;
+  letter-spacing: normal;
+}
 .risultato-range {
   font-size: 0.95rem;
   color: #5a6772;
