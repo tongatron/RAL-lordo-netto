@@ -29,7 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-sim').addEventListener('click', simulaRAL);
   document.getElementById('comune').addEventListener('change', applicaComune);
   initInstall();
+  initSimToggle();
 });
+
+// --- Testo dinamico del pulsante che apre/chiude la simulazione RAL da CCNL ---
+function initSimToggle() {
+  const body = document.getElementById('sim-contratto-body');
+  const btn = document.getElementById('btn-sim-toggle');
+  body.addEventListener('shown.bs.collapse', () => { btn.textContent = 'Nascondi simulazione'; });
+  body.addEventListener('hidden.bs.collapse', () => { btn.textContent = 'Mostra simulazione'; });
+}
 
 // --- Pulsante "Installa l'app" (PWA), mostrato solo su telefono ---
 function initInstall() {

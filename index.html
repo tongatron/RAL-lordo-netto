@@ -59,7 +59,7 @@
 
           <h1 class="h2 mb-2">RAL, calcolo lordo/netto</h1>
           <p class="lead text-muted mb-3">
-            Inserisci la RAL in trattativa: la pagina stima il <strong>netto annuo</strong>,
+            Inserisci la RAL in trattativa o simula dal contratto: la pagina stima il <strong>netto annuo</strong>,
             il <strong>netto mensile</strong> e il <strong>netto orario</strong>.
           </p>
 
@@ -85,30 +85,36 @@
                       <!-- Simulazione RAL minima da contratto (opzionale) -->
                       <div class="sim-contratto p-3 mb-5">
                         <p class="sim-titolo mb-1">Non conosci la RAL? Stimala dal contratto <span class="badge badge-primary">opzionale</span></p>
-                        <small class="text-muted d-block mb-3">Calcola la RAL <strong>minima</strong> in base a CCNL, livello e ore. Riporta il valore nel campo RAL qui sotto.</small>
+                        <small class="text-muted d-block mb-2">Calcola la RAL <strong>minima</strong> in base a CCNL, livello e ore.</small>
 
-                        <div class="form-group">
-                          <label for="ccnl" class="active">CCNL</label>
-                          <div class="select-wrapper">
-                            <select id="ccnl"><!-- popolato via JS --></select>
+                        <button type="button" id="btn-sim-toggle" class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#sim-contratto-body" aria-expanded="false" aria-controls="sim-contratto-body">
+                          Mostra simulazione
+                        </button>
+
+                        <div class="collapse mt-3" id="sim-contratto-body">
+                          <div class="form-group">
+                            <label for="ccnl" class="active">CCNL</label>
+                            <div class="select-wrapper">
+                              <select id="ccnl"><!-- popolato via JS --></select>
+                            </div>
                           </div>
-                        </div>
 
-                        <div class="form-group">
-                          <label for="livello" class="active">Livello contrattuale</label>
-                          <div class="select-wrapper">
-                            <select id="livello"><!-- popolato via JS --></select>
+                          <div class="form-group">
+                            <label for="livello" class="active">Livello contrattuale</label>
+                            <div class="select-wrapper">
+                              <select id="livello"><!-- popolato via JS --></select>
+                            </div>
                           </div>
-                        </div>
 
-                        <div class="form-group">
-                          <label for="oreSim" class="active">Ore settimanali</label>
-                          <input type="number" id="oreSim" min="1" max="48" step="1" value="40">
-                          <small class="form-text" id="oreSim-help">Tempo pieno del contratto: 40 ore. Inserisci meno ore per un part-time.</small>
-                        </div>
+                          <div class="form-group">
+                            <label for="oreSim" class="active">Ore settimanali</label>
+                            <input type="number" id="oreSim" min="1" max="48" step="1" value="40">
+                            <small class="form-text" id="oreSim-help">Tempo pieno del contratto: 40 ore. Inserisci meno ore per un part-time.</small>
+                          </div>
 
-                        <button type="button" id="btn-sim" class="btn btn-outline-primary btn-sm w-100">Calcola RAL minima e usala</button>
-                        <small class="form-text mt-2" id="sim-esito"></small>
+                          <button type="button" id="btn-sim" class="btn btn-outline-primary btn-sm w-100">Calcola RAL minima e usala</button>
+                          <small class="form-text mt-2" id="sim-esito"></small>
+                        </div>
                       </div>
 
                       <div class="form-group">
